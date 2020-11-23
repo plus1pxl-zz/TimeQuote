@@ -17,6 +17,24 @@ namespace TimeQuote.Data.Models
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
 
+        public string EmailAddress { get; set; }
+
+        public int OrganizationId { get; set; }
+
+        public Organization Organization { get; set; }
+
+        public int PaymentId { get; set; }
+
+        public virtual Payment Payment { get; set; }
+
+        public int LimitId { get; set; }
+
+        public virtual Limit Limit { get; set; }
+
+        public string ProjectId { get; set; }
+
+        public ICollection<ProjectApplicationUser> ProjectApplicationUsers { get; set; } = new HashSet<ProjectApplicationUser>();
+
         // Audit info
         public DateTime CreatedOn { get; set; }
 

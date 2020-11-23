@@ -25,6 +25,20 @@
 
         public DbSet<Setting> Settings { get; set; }
 
+        public DbSet<Client> Clients { get; set; }
+
+        public DbSet<Limit> Limits { get; set; }
+
+        public DbSet<Organization> Organizations { get; set; }
+
+        public Payment Payments { get; set; }
+
+        public DbSet<Project> Projects { get; set; }
+
+        public DbSet<ProjectApplicationUser> ProjectApplicationUsers { get; set; }
+
+        public DbSet<ToDo> ToDos { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -54,6 +68,39 @@
             EntityIndexesConfiguration.Configure(builder);
 
             var entityTypes = builder.Model.GetEntityTypes().ToList();
+
+            builder.Entity<ApplicationUser>()
+                .HasKey(x => x.Id);
+
+            builder.Entity<Project>()
+                .HasKey(x => x.Id);
+
+            builder.Entity<ProjectApplicationUser>()
+                .HasKey(pau => new
+                {
+                    pau.ApplicationUserId,
+                    pau.ProjectId,
+                });
+
+            builder.Entity<ProjectApplicationUser>()
+                .HasOne(x => x.ApplicationUser)
+                .WithMany(p => p.ProjectApplicationUsers)
+                .HasForeignKey(x => x.ApplicationUserId);
+
+            builder.Entity<ProjectApplicationUser>()
+                .HasOne(x => x.Project)
+                .WithMany(u => u.ProjectApplicationUsers)
+                .HasForeignKey(x => x.ProjectId);
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(x => x.Payment)
+                .WithOne(x => x.ApplicationUser)
+                .HasForeignKey<Payment>(p => p.ApplicationUserId);
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(x => x.Limit)
+                .WithOne(x => x.ApplicationUser)
+                .HasForeignKey<Limit>(l => l.ApplicationUserId);
 
             // Set global query filter for not deleted entities only
             var deletableEntityTypes = entityTypes

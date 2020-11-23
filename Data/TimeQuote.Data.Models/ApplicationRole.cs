@@ -19,6 +19,10 @@ namespace TimeQuote.Data.Models
             this.Id = Guid.NewGuid().ToString();
         }
 
+        public int OrganizationId { get; set; }
+
+        public virtual Organization Organization { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
